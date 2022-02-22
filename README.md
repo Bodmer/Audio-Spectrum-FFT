@@ -20,8 +20,8 @@ https://github.com/Bodmer/TFT_eSPI
 
 Screen shots:
 
-![FFT_spectrum_1.png](https://github.com/Bodmer/Audio-Spectrum-FFT/blob/master/FFT_spectrum_1.png?raw=true)
+![FFT_spectrum_1.png](https://github.com/Bodmer/Audio-Spectrum-FFT/blob/main/FFT_spectrum_1.png?raw=true)
 
-![FFT_spectrum_1.png](https://github.com/Bodmer/Audio-Spectrum-FFT/blob/master/FFT_spectrum_2.png?raw=true)
+![FFT_spectrum_1.png](https://github.com/Bodmer/Audio-Spectrum-FFT/blob/main/FFT_spectrum_2.png?raw=true)
 
-![FFT_spectrum_1.png](https://github.com/Bodmer/Audio-Spectrum-FFT/blob/master/FFT_waterfall.png?raw=true)
+![FFT_spectrum_1.png](https://github.com/Bodmer/Audio-Spectrum-FFT/blob/main/FFT_waterfall.png?raw=true)
