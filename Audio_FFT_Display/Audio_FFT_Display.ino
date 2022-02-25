@@ -217,7 +217,7 @@ void loop() {
       fps = String((interval * 1000.0 / (millisSinceUpdate))) + " fps";
       //Serial.println(fps);
       tft.setTextDatum(TC_DATUM);
-      tft.setTextPadding(tft.textWidth(" 999 fps ", 2));
+      tft.setTextPadding(tft.textWidth(" 999.99 fps ", 2));
       tft.drawString(fps, tft.width()/2, 55 + HEIGHT + 5, 2);
       startMillis = millis();
     }
