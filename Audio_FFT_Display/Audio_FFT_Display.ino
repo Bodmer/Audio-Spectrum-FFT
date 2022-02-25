@@ -25,18 +25,22 @@
 
 // If the samples are set to N then the FFT generates N/2 valid points
 #define SAMPLES 256 //Number of samples for the FFT - 64, 128, 256 or 512
-#define SAMPLING_FREQUENCY 10000 // Frequency range plotted is 2.5kHz (sampling frequency/4)
+#define SAMPLING_FREQUENCY 14000 // Frequency range plotted is 2.5kHz (sampling frequency/4)
 
 // Display options
 #define DRAW_SPECTRUM  // Draw the spectrum
-#define DRAW_PEAK      // Draw spectrum peak (if DRAW_SPECTRUM defined)
 //#define DRAW_WATERFALL // Draw a frequency waterfall
 #define DRAW_TRACE     // Draw a scope type trace (not good with waterfall!)
+
+// Use just ONE of the following if DRAW_SPECTRUM defined
+//#define DRAW_PEAK      // Draw spectrum peak bar
+#define DOT_PEAK       //  Draw spectrum peak dot
+
 
 // Scale factors for the display
 #define TRACE_SCALE 25      // Scale factor for 'scope trace amplitude
 #define FFT_SCALE  SAMPLES  // Scale factor for FFT bar amplitude (scale = samples seems to work)
-#define EXP_FILTER 0.95     // Exponential peak filter decay rate, 0.9 fast decay, 0.99 very slow
+#define EXP_FILTER 0.98     // Exponential peak filter decay rate, 0.9 fast decay, 0.99 very slow
 
 // Audio sample buffer
 short sampleBuffer[64];
@@ -54,6 +58,7 @@ uint16_t counter = 0; // Frame counter
 long startMillis = millis(); // Timer for FPS
 uint16_t interval = 100; // FPS calculated over 100 frames
 String fps = "0 fps";
+uint32_t dt = 0;
 
 void onPDMdata(void);  // Call back to get the audio samples
 
@@ -63,7 +68,7 @@ TFT_eSprite spr = TFT_eSprite(&tft);  // Declare Sprite object "spr" with pointe
 
 // Sprite width and height
 #define WIDTH  256
-#define HEIGHT 128
+#define HEIGHT 160
 
 // Pointer to the sprite image
 uint16_t* sptr = nullptr;
@@ -85,12 +90,16 @@ void setup() {
   tft.setTextColor(TFT_WHITE, TFT_NAVY);
   tft.drawString("Audio spectrum FFT", tft.width()/2, 5, 4);
 
-  String str = String((int)SAMPLES) + " samples";
+  String str = String((int)SAMPLES) + " samples, " +String((float)SAMPLING_FREQUENCY/SAMPLES) + " fps (max)";
   tft.drawString(str, tft.width()/2, 30, 2);
 
   tft.setTextDatum(TL_DATUM);
-  str = "Max: " + String((int)SAMPLING_FREQUENCY/4000.0) + "kHz";
-  tft.drawString(str, 31, 55 + HEIGHT + 5, 2);
+  tft.drawNumber(0, 31, 55 + HEIGHT + 5, 2);
+
+  tft.setTextDatum(TR_DATUM);
+  tft.drawFloat(SAMPLING_FREQUENCY/4000.0, 1, 31 + 255,55 + HEIGHT + 5, 2);
+  tft.setTextDatum(TL_DATUM);
+  tft.drawString(" kHz", 31 + 255, 55 + HEIGHT + 5, 2);
 
   // Create the sprite and get the image pointer
   sptr = (uint16_t*)spr.createSprite(WIDTH, HEIGHT);
@@ -122,7 +131,8 @@ void loop() {
 
   // If we have all new samples then run the FFT.
   if (sampleCount >= SAMPLES) {
-
+    //Serial.println(millis() - dt);
+    dt = millis();
     // Do the FFT number crunching
     // approxBuffer contains samples, but will be updated with amplitudes
     Approx_FFT(approxBuffer, SAMPLES, SAMPLING_FREQUENCY);
@@ -139,7 +149,7 @@ void loop() {
 
 #ifdef DRAW_SPECTRUM
     for (uint16_t i = 0; i < SAMPLES / 4; i++) {
-  #ifdef DRAW_PEAK
+  #if defined (DRAW_PEAK) || defined (DOT_PEAK)
       // Track the peak and update decay filter
       if (approxBuffer[i] > peakBuffer[i]) {
         if (approxBuffer[i] / FFT_SCALE < HEIGHT) peakBuffer[i] = approxBuffer[i];
@@ -156,6 +166,11 @@ void loop() {
       uint16_t col = rainbowColor(127 + min(hp, 96));
       spr.fillRect(pw * i, HEIGHT - hp, pw - 1, hp - hr, col);
   #endif
+  #ifdef DOT_PEAK
+      if (hp > HEIGHT) hp = HEIGHT;
+      uint16_t col = rainbowColor(127 + min(hp, 96));
+      spr.fillRect(pw * i, HEIGHT - hp, pw - 1, 2, col);
+  #endif  
       spr.fillRect(pw * i, HEIGHT - hr, pw - 1, hr, TFT_WHITE);
     }
 #endif
@@ -170,7 +185,7 @@ void loop() {
     }
 
     // Render the 'scope trace, only a half the buffer is plotted after the trigger point
-    for (uint16_t x = 0; x < WIDTH - pw; x += pw) {
+    for (uint16_t x = 0; x < WIDTH; x += pw) {
       spr.drawLine(x, HEIGHT / 2 - (streamBuffer[startSample] / TRACE_SCALE), x + pw, HEIGHT / 2 - (streamBuffer[startSample + 1] / TRACE_SCALE), TFT_GREEN);
       startSample++;
       if (startSample >= SAMPLES - 1) break;
@@ -199,16 +214,18 @@ void loop() {
     // only calculate the fps every <interval> iterations.
     if (counter % interval == 0) {
       long millisSinceUpdate = millis() - startMillis;
-      fps = String((int)(interval * 1000.0 / (millisSinceUpdate))) + " fps";
-      Serial.println(fps);
-      tft.setTextDatum(TR_DATUM);
+      fps = String((interval * 1000.0 / (millisSinceUpdate))) + " fps";
+      //Serial.println(fps);
+      tft.setTextDatum(TC_DATUM);
       tft.setTextPadding(tft.textWidth(" 999 fps ", 2));
-      tft.drawString(fps, 31 + WIDTH, 55 + HEIGHT + 5, 2);
+      tft.drawString(fps, tft.width()/2, 55 + HEIGHT + 5, 2);
       startMillis = millis();
     }
     // Been a while, so reset to synch with next clean buffer
-    samplesRead = 0;
+    //samplesRead = 0;
+    //Serial.println(millis() - dt);
   }
+
 }
 
 void onPDMdata()
