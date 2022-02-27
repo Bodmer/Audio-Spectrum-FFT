@@ -2,6 +2,8 @@
 
 This sketch is for the RP2040 Arduino Nano Connect connected to a 320 x 240 TFT display. It uses the onboard microphone to sample audio signals and display the frequency spectra on a TFT display.  The sketch uses FFT analysis to extract the frequency spectrum from the signal.
 
+A similar sketch that samples an ADC channel instead of a PDM microphone can be found [here.](https://github.com/Bodmer/ADC_DMA_FFT)
+
 The spectrum can be displayed as a spectrum (frequency .v. amlitude) format, or as a scrolling waterfall (frequency .v. time).
 
 The peaks are displayed and decay. The waveform can also be displayed.
