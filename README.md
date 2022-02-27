@@ -29,7 +29,7 @@ There are #define options to alter the defaults:
 2. FFT sample count
 3. FFT window size
 4. Peak marker on/off and decay rate
-5. Peak marker as bar or dor
+5. Peak marker as bar or dot
 6. 'scope trace on/off
 7. Waterfall option (default off)
 
