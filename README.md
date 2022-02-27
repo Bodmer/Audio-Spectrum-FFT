@@ -30,8 +30,9 @@ There are #define options to alter the defaults:
 3. FFT window size
 4. Peak marker on/off and decay rate
 5. Peak marker as bar or dot
-6. 'scope trace on/off
-7. Waterfall option (default off)
+6. Frequency amplitude gain
+7. Oscilloscope trace on/off and amplitude gain
+8. Waterfall option (default off)
 
 The display update uses DMA so that the display can be updated while an FFT and sample gathering is in progress.
 
