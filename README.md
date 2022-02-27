@@ -27,7 +27,7 @@ Note: Some Arduino Nano Connect PDM microphones do not work at certain sample ra
 There are #define options to alter the defaults:
 1. Sample rate
 2. FFT sample count
-3. FFT window size
+3. FFT display area size
 4. Peak marker on/off and decay rate
 5. Peak marker as bar or dot
 6. Frequency amplitude gain
