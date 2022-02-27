@@ -36,6 +36,8 @@ There are #define options to alter the defaults:
 
 The display update uses DMA so that the display can be updated while an FFT and sample gathering is in progress.
 
+To stabilise the 'scope trace the sketch uses a simple method to determine a rising edge trigger point.
+
 The sketch requires the Earle Philhower RP2040 board package (includes PDM microphone library) to be used:
 https://github.com/earlephilhower/arduino-pico
 
