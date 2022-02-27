@@ -7,10 +7,33 @@ The spectrum can be displayed as a spectrum (frequency .v. amlitude) format, or 
 The peaks are displayed and decay. The waveform can also be displayed.
 
 Screen update rate varies with the number of FFT samples taken, example fps performance with 62.5MHz SPI clock:
-* FFT samples = 64  -> 100 fps
+* FFT samples = 64  ->  81 fps
 * FFT samples = 128 ->  78 fps
-* FFT samples = 256 ->  31 fps
-* FFT samples = 512 ->  15 fps
+* FFT samples = 256 ->  54 fps
+* FFT samples = 512 ->  21 fps
+
+The FFT display area is set to 256 x 160, this could be changed. The width should be an integer multiple of samples/2 where that integer is a minimum of 1.
+
+The maximum fps will depend on a number of factors:
+1. The number of FFT samples, higher numbers take more time
+2. The sample rate (default is 14kHz), higher rates reduce time taken and change frequency display scale
+3. The time it takes to gather the N samples (sample rate/N fps)
+4. The time it takes to update the screen (depends on sprite size and write speed)
+
+The displayed frequency span is sample rate/4 (so default range is 0-3.5kHz).
+
+Note: Some Arduino Nano Connect PDM microphones do not work at certain sample rates (mine does not work at 16kHz).
+
+There are #define options to alter the defaults:
+1. Sample rate
+2. FFT sample count
+3. FFT window size
+4. Peak marker on/off and decay rate
+5. Peak marker as bar or dor
+6. 'scope trace on/off
+7. Waterfall option (default off)
+
+The display update uses DMA so that the display can be updated while an FFT and sample gathering is in progress.
 
 The sketch requires the Earle Philhower RP2040 board package (includes PDM microphone library) to be used:
 https://github.com/earlephilhower/arduino-pico
