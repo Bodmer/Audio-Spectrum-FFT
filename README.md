@@ -4,7 +4,7 @@ This sketch is for the RP2040 Arduino Nano Connect connected to a 320 x 240 TFT 
 
 A similar sketch that samples an ADC channel instead of a PDM microphone can be found [here.](https://github.com/Bodmer/ADC_DMA_FFT)
 
-The spectrum can be displayed as a spectrum (frequency .v. amlitude) format, or as a scrolling waterfall (frequency .v. time).
+The spectrum can be displayed as a spectrum (frequency .v. amplitude) format, or as a scrolling waterfall (frequency .v. time).
 
 The peaks are displayed and decay. The waveform can also be displayed.
 
